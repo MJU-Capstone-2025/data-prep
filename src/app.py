@@ -30,11 +30,11 @@ if __name__ == "__main__":
         'Coffee_Price',
         'Coffee_Return',
         'Coffee_Price_Return',
-        # 'Crude_Oil_Price_Return',
-        # 'USD_KRW_Return',
-        # 'USD_BRL_Return',
-        # 'USD_COP_Return',
-        # 'USD_ETB_Return'
+        'Crude_Oil_Price_Return',
+        'USD_KRW_Return',
+        'USD_BRL_Return',
+        'USD_COP_Return',
+        'USD_ETB_Return'
     ]
 
     processor2 = Preprocessor2(

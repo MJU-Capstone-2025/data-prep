@@ -56,6 +56,13 @@ class TestRFmodel:
         self.data = None
         self.model = None
         self.cat_features = []
+        self.market_features = [
+            "Crude_Oil_Price_Return",
+            "USD_KRW_Return",
+            "USD_BRL_Return",
+            "USD_COP_Return",
+            "USD_ETB_Return"
+        ]
 
     def load_datas(self, filepath="../data/final/train_data.csv"):
         """데이터 로드"""
@@ -63,7 +70,7 @@ class TestRFmodel:
         print(f"📄 데이터 로드 완료: shape = {self.data.shape}")
         return self.data
 
-    def run_training_pipeline(self, save_path="../data/test_pred_result/rf/rf_pred_result.csv", alpha=5.0):
+    def run_training_pipeline(self, save_path="../data/test_pred_result/rf/rf_pred_result.csv", alpha=4.5, use_market_features=True):
         """모델 학습 및 검증 결과 저장/시각화"""
         df = self.data.copy()
         df["Date"] = pd.to_datetime(df["Date"])
@@ -72,6 +79,12 @@ class TestRFmodel:
 
         target_col = "Coffee_Price_Return"
         exclude_cols = ["Date", "Coffee_Price", "Coffee_Price_Return"]
+
+
+        # 💡 Market feature 제외 설정
+        if not use_market_features:
+            exclude_cols += self.market_features
+
         X = df[[col for col in df.columns if col not in exclude_cols]]
         y = df[target_col]
 
@@ -84,7 +97,8 @@ class TestRFmodel:
         val_prices = df["Coffee_Price"].iloc[split_idx:]
 
         self.model = RandomForestModel()
-        self.model.train(X_train, y_train, cat_features=self.cat_features)
+        print(f"학습에 사용된 컬럼: {X_train.columns}")   
+        self.model.train(X_train, y_train, cat_features=self.cat_features) 
         preds = self.model.predict(X_val, alpha=alpha)
 
         results = pd.DataFrame({
@@ -111,7 +125,7 @@ class TestRFmodel:
 
         self._plot_prediction(results, save_path.replace(".csv", "_plot.png"))
 
-    def predict_future_until(self, start_date: str, end_date: str, save_path="../data/test_pred_result/rf/future_pred.csv", alpha=5.0):
+    def predict_future_until(self, start_date: str, end_date: str, save_path="../data/test_pred_result/rf/future_pred.csv", alpha=4.5, use_market_features=True):
         """2025-01-01 ~ 2025-04-01 예측 및 시각화"""
         df = self.data.copy()
         df["Date"] = pd.to_datetime(df["Date"])
@@ -138,6 +152,9 @@ class TestRFmodel:
                 new_row[f"{feature}_lag_1m"] = last_row[feature].values[0]
 
             input_row = new_row.drop(columns=["Date", "Coffee_Price", "Coffee_Price_Return"])
+            if not use_market_features:
+                input_row = input_row.drop(columns=[col for col in self.market_features if col in input_row.columns])
+
             pred_return = self.model.predict(input_row.iloc[0:1], alpha=alpha)[0]
             predicted_price = last_known_price * (1 + pred_return)
 
@@ -153,6 +170,7 @@ class TestRFmodel:
                 "Predicted_Coffee_Price": predicted_price
             })
 
+        print(f"예측에 사용된 컬럼: {input_row.columns}") 
         result_df = pd.DataFrame(predictions)
 
         # 실제 커피 가격 병합
@@ -245,5 +263,5 @@ class TestRFmodel:
 if __name__ == "__main__":
     tester = TestRFmodel()
     tester.load_datas("../data/final/train_data.csv")
-    tester.run_training_pipeline(alpha=4.5)
-    tester.predict_future_until("2025-01-01", "2025-04-01", alpha=4.5)
+    tester.run_training_pipeline(alpha=1, use_market_features=True)
+    tester.predict_future_until("2025-01-01", "2025-04-01", alpha=1, use_market_features=True)
