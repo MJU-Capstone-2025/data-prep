@@ -1,4 +1,4 @@
-### 1. Raw data
+### 1. Raw Data
 
 **국가\_지역.csv 컬럼 이름 설명**
 
@@ -36,7 +36,7 @@
 -   `USD_COP`: 미국 달러(USD) 대비 콜롬비아 페소(COP) 환율 (페소/달러 – 심볼: COP=X)
 -   `USD_VND`: 미국 달러(USD) 대비 베트남 동(VND) 환율 (동/달러 – 심볼: VND=X)
 
-### 2. Processed1 data
+### 2. Processed1 Data
 
 **국가\_지역.csv 컬럼 이름 설명**
 
@@ -56,7 +56,7 @@
 
 -   raw와 같음
 
-### 3. Processed2 data
+### 3. Processed2 Data
 
 **국가\_지역.csv 컬럼 이름 설명**
 
@@ -69,3 +69,37 @@
     -   `WS2M_lag_1m ~ WS2M_lag_6m`: 2m 풍속의 1~6개월 전 시점 값을 lag feature로 생성
     -   `ALLSKY_SFC_SW_DWN_lag_1m ~ _6m`: 단파 복사량의 1~6개월 전 시점 값을 lag feature로 생성
     -   `PRECTOTCORR_lag_1m ~ _6m`: 강수량의 1~6개월 전 시점 값을 lag feature로 생성
+
+### 4. Final Train Weather Data
+
+##### 📋 컬럼 설명
+
+| 컬럼명                | 설명                                                         |
+| --------------------- | ------------------------------------------------------------ |
+| `Date`                | 관측 날짜 (YYYY-MM-DD)                                       |
+| `T2M`                 | 평균 기온 (2m 지면 기준, 단위: °C)                           |
+| `WS2M`                | 평균 풍속 (2m 지면 기준, 단위: m/s)                          |
+| `ALLSKY_SFC_SW_DWN`   | 일사량 (단위: W/m²), 지표면에 도달한 단일 일평균 태양 복사량 |
+| `ALLSKY_SFC_UV_INDEX` | 자외선 지수 (UV Index)                                       |
+| `PRECTOTCORR`         | 강수량 (단위: mm/day)                                        |
+| `RH2M`                | 평균 상대 습도 (%), 2m 기준                                  |
+| `PS`                  | 평균 지면 기압 (단위: hPa)                                   |
+| `Coffee_Price`        | 해당 날짜의 커피 가격 (cents/lb)                             |
+| `Coffee_Return`       | 커피 가격 수익률 (전일 대비 변화율, `pct_change`)            |
+| `season_tag`          | 해당 날짜의 계절 구분 (예: harvest, pre-harvest, off-season) |
+| `days_until_harvest`  | 다음 수확일까지 남은 일수                                    |
+
+##### 📌 Lag Feature 설명
+
+| 컬럼명                                | 설명                         |
+| ------------------------------------- | ---------------------------- |
+| `T2M_lag_1m` ~ `T2M_lag_6m`           | 1개월 ~ 6개월 전의 평균 기온 |
+| `WS2M_lag_1m` ~ `WS2M_lag_6m`         | 1개월 ~ 6개월 전의 평균 풍속 |
+| `ALLSKY_SFC_SW_DWN_lag_1m` ~ `lag_6m` | 1개월 ~ 6개월 전의 일사량    |
+| `PRECTOTCORR_lag_1m` ~ `lag_6m`       | 1개월 ~ 6개월 전의 강수량    |
+
+##### 🌍 지역 정보
+
+| 컬럼명         | 설명                                           |
+| -------------- | ---------------------------------------------- |
+| `locationName` | 데이터 수집 지역 이름 (예: brazil_varginha 등) |
