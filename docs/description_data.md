@@ -1,4 +1,6 @@
-### 1. Raw Data
+# Data Description
+
+## 1. Raw Data
 
 **국가\_지역.csv 컬럼 이름 설명**
 
@@ -36,6 +38,8 @@
 -   `USD_COP`: 미국 달러(USD) 대비 콜롬비아 페소(COP) 환율 (페소/달러 – 심볼: COP=X)
 -   `USD_VND`: 미국 달러(USD) 대비 베트남 동(VND) 환율 (동/달러 – 심볼: VND=X)
 
+---
+
 ### 2. Processed1 Data
 
 **국가\_지역.csv 컬럼 이름 설명**
@@ -56,6 +60,8 @@
 
 -   raw와 같음
 
+---
+
 ### 3. Processed2 Data
 
 **국가\_지역.csv 컬럼 이름 설명**
@@ -69,6 +75,8 @@
     -   `WS2M_lag_1m ~ WS2M_lag_6m`: 2m 풍속의 1~6개월 전 시점 값을 lag feature로 생성
     -   `ALLSKY_SFC_SW_DWN_lag_1m ~ _6m`: 단파 복사량의 1~6개월 전 시점 값을 lag feature로 생성
     -   `PRECTOTCORR_lag_1m ~ _6m`: 강수량의 1~6개월 전 시점 값을 lag feature로 생성
+
+---
 
 ### 4. Final Train Weather Data
 
@@ -106,6 +114,8 @@
 | 컬럼명         | 설명                                           |
 | -------------- | ---------------------------------------------- |
 | `locationName` | 데이터 수집 지역 이름 (예: brazil_varginha 등) |
+
+---
 
 ### 5. Final Market Data & Coffee Label
 
