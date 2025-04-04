@@ -74,6 +74,9 @@
 
 ##### 📋 컬럼 설명
 
+> `train_weather`의 `Date` 는 2015/01/01 - 2024/12/31까지
+> `test_weather`의 `Date` 는 2025/01/01 - 2025/04/01까지
+
 | 컬럼명                | 설명                                                         |
 | --------------------- | ------------------------------------------------------------ |
 | `Date`                | 관측 날짜 (YYYY-MM-DD)                                       |
@@ -103,3 +106,24 @@
 | 컬럼명         | 설명                                           |
 | -------------- | ---------------------------------------------- |
 | `locationName` | 데이터 수집 지역 이름 (예: brazil_varginha 등) |
+
+### 5. Final Market Data & Coffee Label
+
+**coffee_c_price 컬럼 이름 설명**
+
+-   `Date`: 날짜 (YYYY-MM-DD) 형식
+-   `Coffee_Price`: 커피 선물 가격 (센트/파운드, Coffee C Futures – 심볼: KC=F)
+
+**market_data 컬럼 이름 설명**
+
+-   `Date`: 날짜 (YYYY-MM-DD) 형식
+-   `Coffee_Price`: 커피 선물 가격 (센트/파운드, Coffee C Futures – 심볼: KC=F)
+-   `Crude_Oil_Price`: 서부 텍사스산 원유(WTI) 가격 (달러/배럴 – 심볼: CL=F)
+-   `USD_KRW`: 미국 달러(USD) 대비 한국 원(KRW) 환율 (원/달러 – 심볼: KRW=X)
+-   `USD_BRL`: 미국 달러(USD) 대비 브라질 헤알(BRL) 환율 (헤알/달러 – 심볼: BRL=X)
+-   `USD_COP`: 미국 달러(USD) 대비 콜롬비아 페소(COP) 환율 (페소/달러 – 심볼: COP=X)
+-   `USD_ETB`: 미국 달러(USD) 대비 에티오피아 비르(ETB) 환율 (비르/달러 – 심볼: ETB=X)
+-   `USD_KRW_Return`: USD/KRW 환율의 일간 변화율 (`pct_change()`로 계산)
+-   `USD_BRL_Return`: USD/BRL 환율의 일간 변화율
+-   `USD_COP_Return`: USD/COP 환율의 일간 변화율
+-   `USD_ETB_Return`: USD/ETB 환율의 일간 변화율
