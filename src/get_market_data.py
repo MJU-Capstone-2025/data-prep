@@ -17,7 +17,7 @@ class MarketDataFetcher:
             'USD_KRW': 'KRW=X',
             'USD_BRL': 'BRL=X',
             'USD_COP': 'COP=X',
-            'USD_VND': 'VND=X'
+            'USD_ETB': 'ETB=X'  # 에티오피아 환율
         }
 
         combined_data = {}
@@ -37,6 +37,12 @@ class MarketDataFetcher:
         df = df.reset_index()
         df['Date'] = pd.to_datetime(df['Date']).dt.date
         df = df.groupby("Date").mean().reset_index()
+
+        # 💹 환율 변화율 계산
+        fx_cols = ['USD_KRW', 'USD_BRL', 'USD_COP', 'USD_ETB']
+        for col in fx_cols:
+            if col in df.columns:
+                df[f"{col}_Return"] = df[col].pct_change()
 
         self.data = df
         print("✅ 데이터 수집 및 정리 완료")

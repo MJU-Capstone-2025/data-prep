@@ -1,6 +1,6 @@
 from get_market_data import MarketDataFetcher
 from preprocessor1 import Preprocessor1
-from join_data_with_coffee import WeatherCoffeeMerger
+from join_data_with_market import WeatherCoffeeMerger
 from preprocessor2 import Preprocessor2
 from merge_weather_data import WeatherDataMerger  
 

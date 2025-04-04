@@ -88,10 +88,17 @@ class Preprocessor1:
 
         for name, df in self.data.items():
             df = self.propagate_missing_values(df)
-
+        
             if name == "coffee_c_price":
                 df = self.add_return_column(df)
-
+        
+            if name == "market_data":
+                return_cols = ["USD_KRW_Return", "USD_BRL_Return", "USD_COP_Return", "USD_ETB_Return"]
+                for col in return_cols:
+                    if col in df.columns:
+                        df.loc[0, col] = pd.NA  # 첫 번째 행만 NaN 처리
+        
             self.data[name] = df
+
 
         self.save(save_dir)
