@@ -1,7 +1,8 @@
 from get_market_data import MarketDataFetcher
 from preprocessor1 import Preprocessor1
-from merge_data_with_coffee import WeatherCoffeeMerger
-from preprocessor2 import Preprocessor2  
+from join_data_with_coffee import WeatherCoffeeMerger
+from preprocessor2 import Preprocessor2
+from merge_weather_data import WeatherDataMerger  
 
 if __name__ == "__main__":
     # 1. 시장 데이터 수집
@@ -36,3 +37,6 @@ if __name__ == "__main__":
         output_dir="../data/processed2"
     )
     processor2.run_all()
+
+    merger = WeatherDataMerger()
+    merger.run_all()

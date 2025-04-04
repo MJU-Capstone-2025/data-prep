@@ -38,8 +38,9 @@ DATA-PREP/
 
     - `get_market_data.py`을 자동으로 실행하여 market 데이터(coffee c, 국제 유가, 환율 등)을 수집합니다.
     - `preprocessor1.py`을 자동으로 실행하여 계절 데이터와 market 데이터를 자동으로 전처리 합니다.
-    - `merge_data_with_coffee.py`을 자동으로 실행하여 target 컬럼을 자동으로 병합합니다. 이렇게 가공된 데이터는 `data/processed1/`에 저장됩니다.
+    - `join_data_with_coffee.py`을 자동으로 실행하여 target 컬럼을 자동으로 병합합니다. 이렇게 가공된 데이터는 `data/processed1/`에 저장됩니다.
     - `preprocessor2.py`을 자동으로 실행하여 상관관계가 매우 높은 컬럼을 삭제하여 차원을 축소하고, 여러 파생 컬럼을 추가합니다.
         > 축소된 컬럼과 파생 컬럼의 정보는 [이곳](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/docs/description_features.md)에서 확인 할 수 있습니다.
+    - `merge_weather_data.py`를 실행하여 위에서 가공된 데이터들을 하나의 데이터 파일로 통합하여 `data/final/`에 저장합니다.
 
 2. `correlation_visualizer.py` 을 실행하여 데이터의 상관관계 정보를 시각화하여 볼 수 있습니다.
