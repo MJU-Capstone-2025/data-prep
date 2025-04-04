@@ -1,8 +1,6 @@
 # Random Forest Model & 계절 데이터를 활용하여 향후 커피 가격 예측
 
----
-
-### 1. 사용한 데이터
+## 1. 사용한 데이터
 
 [`data/final/train_weather.csv`](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/data/final/train_weather.csv)을 사용하여 모델을 학습시켰습니다.
 
@@ -10,7 +8,7 @@
 
 ---
 
-### 2. 학습에 사용한 모델
+## 2. 학습에 사용한 모델
 
 ```py
 RandomForestRegressor(
@@ -23,19 +21,19 @@ RandomForestRegressor(
 
 현재는 예측 가능성을 확인하기 위해서 **Random Forest**를 사용하였으며, 하이퍼 파라미터는 위와 같이 설정하였습니다.
 
-train_data는 **2015/01/01 - 2023/12/31**이며 이 기간동안의 기후 데이터를 학습하여, **2024/01/01 ~ 2024/04/01**까지 총 4개월을 예측하도록 코드를 작성하였습니다.
+train_data는 **2015/01/01 - 2024/12/31**이며 이 기간동안의 기후 데이터를 학습하여, **2025/01/01 ~ 2025/04/01**까지 총 4개월을 예측하도록 코드를 작성하였습니다.
 
 > 예측 코드는 [이곳](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/src/test/rf_pred_price.py)에서 확인할 수 있습니다.
 
 ---
 
-### 3. Coffee Price 예측 결과
+## 3. Coffee Price 예측 결과
 
 ![rf_price_pred_result_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/data/test_pred_result/rf/rf_price_pred_result_plot.png?raw=true)
 
 <small>[이미지 링크](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/data/test_pred_result/rf/rf_price_pred_result_plot.png)</small>
 
-예측 Target은 당연히 커피의 가격이며, **2024/01/01 ~ 2024/04/01** 범위를 예측하기 전 train data의 최근 20퍼센트를 검증 데이터로 활용하였습니다. 검증 기간동안의 가격 예측 결과는 위와 같습니다.
+예측 Target은 당연히 커피의 가격이며, **2025/01/01 ~ 2025/04/01** 범위를 예측하기 전 train data의 최근 20퍼센트를 검증 데이터로 활용하였습니다. 검증 기간동안의 가격 예측 결과는 위와 같습니다.
 
 위 그래프를 보면 예측 결과와 실제 값의 오차가 매우 큰 것을 알 수 있습니다. 2023년 전에는 낮은 가격에서 상승 및 횡보를 하였고, 2023년 이후에는 큰 폭으로 가격이 상승하였기에 모델은 낮은 가격의 범위에서 예측 결과를 도출하게 되어 현재 가격대에 전혀 대응을 하지 못하고 있습니다.
 
@@ -43,7 +41,7 @@ train_data는 **2015/01/01 - 2023/12/31**이며 이 기간동안의 기후 데�
 
 <small>[이미지 링크](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/data/test_pred_result/rf/future_price_pred_plot.png)</small>
 
-위 이미지는 테스트 기간인 **2024/01/01 ~ 2024/04/01** 동안의 커피 가격을 예측한 결과입니다. 그래프를 보면, 모델이 여전히 낮은 가격대에서 예측하려는 경향을 보이며, 이로 인해 `실제값 - 예측값`의 차이가 크게 발생하고 있습니다.
+위 이미지는 테스트 기간인 **2025/01/01 ~ 2025/04/01** 동안의 커피 가격을 예측한 결과입니다. 그래프를 보면, 모델이 여전히 낮은 가격대에서 예측하려는 경향을 보이며, 이로 인해 `실제값 - 예측값`의 차이가 크게 발생하고 있습니다.
 
 이러한 문제를 해결하기 위한 방법으로는, **가격에 로그 변환을 적용**하여 전체 값을 비슷한 범위로 스케일링함으로써 고가와 저가를 균형 있게 학습하도록 유도할 수 있습니다. 하지만 현재처럼 오차가 큰 상황에서는, 로그 변환만으로는 충분한 개선을 기대하기 어렵다고 판단하였습니다.
 
@@ -51,13 +49,13 @@ train_data는 **2015/01/01 - 2023/12/31**이며 이 기간동안의 기후 데�
 
 ---
 
-### 4. Coffee Price Return 예측 결과
+## 4. Coffee Price Return 예측 결과
 
 > 예측 코드는 [이곳](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/src/test/rf_pred_return.py)에서 확인할 수 있습니다.
 
 ![rf_pred_result_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/data/test_pred_result/rf/rf_pred_result_plot.png?raw=true)
 
-예측 Target은 `Coffee_Price_Return` 컬럼이며, 검증 구간(최근 20%)에서의 예측 결과는 위와 같습니다. 모델은 변화율을 예측하고, 이를 직전 커피 가격에 적용하는 방식으로 최종 가격을 계산합니다.
+예측 Target은 `Coffee_Return` 컬럼이며, 검증 구간(최근 20%)에서의 예측 결과는 위와 같습니다. 모델은 변화율을 예측하고, 이를 직전 커피 가격에 적용하는 방식으로 최종 가격을 계산합니다.
 
 이처럼 커피 가격 자체를 직접 예측하는 것보다 변화율(Return)을 예측하는 방식이 훨씬 더 정교한 결과를 만들어냅니다. 실제 관측값이 존재하는 검증 구간에서는 급격한 기후 변화나 패턴 등을 모델이 잘 포착해내기 때문에 정확도 높은 예측이 가능합니다.
 
@@ -69,7 +67,7 @@ train_data는 **2015/01/01 - 2023/12/31**이며 이 기간동안의 기후 데�
 
 ---
 
-### 5. 정확도 향상을 위한 개선 방안
+## 5. 정확도 향상을 위한 개선 방안
 
 현재 모델은 Random Forest 기반의 회귀 모델로, 과거 기후 및 계절 데이터를 바탕으로 커피 가격의 변화율을 예측하는 구조입니다. 다만, 미래 예측 구간에서는 실제 관측값이 없어 lag feature에 의존해야 하므로 예측의 한계가 존재합니다.
 
