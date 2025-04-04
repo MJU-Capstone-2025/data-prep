@@ -57,7 +57,7 @@ class TestRFmodel:
         self.model = None
         self.cat_features = []
 
-    def load_datas(self, filepath="../data/final/train_weather.csv"):
+    def load_datas(self, filepath="../data/final/train_data.csv"):
         """데이터 로드"""
         self.data = pd.read_csv(filepath)
         print(f"📄 데이터 로드 완료: shape = {self.data.shape}")
@@ -70,8 +70,8 @@ class TestRFmodel:
         df = df.sort_values("Date").reset_index(drop=True)
         df = df.dropna()
 
-        target_col = "Coffee_Return"
-        exclude_cols = ["Date", "Coffee_Price", "Coffee_Return"]
+        target_col = "Coffee_Price_Return"
+        exclude_cols = ["Date", "Coffee_Price", "Coffee_Price_Return"]
         X = df[[col for col in df.columns if col not in exclude_cols]]
         y = df[target_col]
 
@@ -137,11 +137,11 @@ class TestRFmodel:
                     new_row[f"{feature}_lag_{m}m"] = new_row[f"{feature}_lag_{m - 1}m"].values[0]
                 new_row[f"{feature}_lag_1m"] = last_row[feature].values[0]
 
-            input_row = new_row.drop(columns=["Date", "Coffee_Price", "Coffee_Return"])
+            input_row = new_row.drop(columns=["Date", "Coffee_Price", "Coffee_Price_Return"])
             pred_return = self.model.predict(input_row.iloc[0:1], alpha=alpha)[0]
             predicted_price = last_known_price * (1 + pred_return)
 
-            new_row["Coffee_Return"] = pred_return
+            new_row["Coffee_Price_Return"] = pred_return
             new_row["Coffee_Price"] = predicted_price
             last_known_price = predicted_price
 
@@ -244,6 +244,6 @@ class TestRFmodel:
 
 if __name__ == "__main__":
     tester = TestRFmodel()
-    tester.load_datas("../data/final/train_weather.csv")
+    tester.load_datas("../data/final/train_data.csv")
     tester.run_training_pipeline(alpha=4.5)
     tester.predict_future_until("2025-01-01", "2025-04-01", alpha=4.5)

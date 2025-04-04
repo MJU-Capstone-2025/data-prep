@@ -7,8 +7,8 @@ class WeatherDataMerger:
     def __init__(
         self,
         input_path="../data/processed2/*.csv",
-        output_path="../data/final/train_weather.csv",
-        test_output_path="../data/final/test_weather.csv",
+        output_path="../data/final/train_data.csv",
+        test_output_path="../data/final/test_data.csv",
         test_only_price_output="../data/final/coffee_label.csv",
         test_start="2025-01-01",
         test_end="2025-04-01"
@@ -63,7 +63,7 @@ class WeatherDataMerger:
         print(f"📁 저장 위치: {self.test_output_path}")
 
         # 테스트 가격 데이터 저장
-        price_cols = ["Date", "Coffee_Price", "Coffee_Return"]
+        price_cols = ["Date", "Coffee_Price", "Coffee_Price_Return"]
         if all(col in test_df.columns for col in price_cols):
             dedup_price_df = test_df[price_cols].drop_duplicates(subset=["Date"])
             dedup_price_df.to_csv(self.test_only_price_output, index=False)

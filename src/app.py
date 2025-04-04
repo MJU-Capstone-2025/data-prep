@@ -28,7 +28,13 @@ if __name__ == "__main__":
         'RH2M',
         'PS',
         'Coffee_Price',
-        'Coffee_Return'
+        'Coffee_Return',
+        'Coffee_Price_Return',
+        # 'Crude_Oil_Price_Return',
+        # 'USD_KRW_Return',
+        # 'USD_BRL_Return',
+        # 'USD_COP_Return',
+        # 'USD_ETB_Return'
     ]
 
     processor2 = Preprocessor2(
@@ -38,5 +44,6 @@ if __name__ == "__main__":
     )
     processor2.run_all()
 
+    # 5. 데이터 병합
     merger = WeatherDataMerger()
     merger.run_all()

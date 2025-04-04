@@ -38,11 +38,11 @@ class MarketDataFetcher:
         df['Date'] = pd.to_datetime(df['Date']).dt.date
         df = df.groupby("Date").mean().reset_index()
 
-        # 💹 환율 변화율 계산
-        fx_cols = ['USD_KRW', 'USD_BRL', 'USD_COP', 'USD_ETB']
+        # 커피, 오일 가격 및 환율 변화율 계산
+        fx_cols = ['Coffee_Price', 'Crude_Oil_Price','USD_KRW', 'USD_BRL', 'USD_COP', 'USD_ETB']
         for col in fx_cols:
             if col in df.columns:
-                df[f"{col}_Return"] = df[col].pct_change()
+                df[f"{col}_Return"] = df[col].pct_change(fill_method=None)
 
         self.data = df
         print("✅ 데이터 수집 및 정리 완료")

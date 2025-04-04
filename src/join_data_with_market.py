@@ -37,7 +37,7 @@ class WeatherCoffeeMerger:
         else:
             print("❌ 저장할 병합 데이터가 없습니다.")
 
-    def run_all(self, coffee_path="../data/processed1/coffee_c_price.csv", input_dir="../data/processed1"):
+    def run_all(self, coffee_path="../data/processed1/market_data.csv", input_dir="../data/processed1"):
         weather_files = [
             "brazil_carmo_de_minas",
             "brazil_patrocinio",

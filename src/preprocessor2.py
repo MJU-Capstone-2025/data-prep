@@ -41,8 +41,9 @@ class Preprocessor2:
             for shift_day in range(1, 8):
                 df['Coffee_Price'] = df['Coffee_Price'].fillna(df['Coffee_Price'].shift(shift_day))
 
-        if 'Coffee_Return' in df.columns:
-            df['Coffee_Return'] = df['Coffee_Return'].fillna(0.0)
+        return_cols = [col for col in df.columns if col.endswith('_Return')]
+        df[return_cols] = df[return_cols].fillna(0.0)
+
 
         return df
 
@@ -130,7 +131,7 @@ if __name__ == "__main__":
         'RH2M',
         'PS',
         'Coffee_Price',
-        'Coffee_Return'
+        'Coffee_Price_Return'
     ]
 
     processor = Preprocessor2(

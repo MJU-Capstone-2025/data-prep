@@ -41,7 +41,7 @@ class Preprocessor1:
     def propagate_missing_values(self, df: pd.DataFrame, max_days: int = 7):
         for shift_day in range(1, max_days + 1):
             df.fillna(df.shift(shift_day), inplace=True)
-        df.fillna(method='bfill', inplace=True)
+        df.bfill(inplace=True) 
         return df
 
     def add_return_column(self, df: pd.DataFrame, price_col='Coffee_Price', return_col='Coffee_Return'):
@@ -93,7 +93,7 @@ class Preprocessor1:
                 df = self.add_return_column(df)
         
             if name == "market_data":
-                return_cols = ["USD_KRW_Return", "USD_BRL_Return", "USD_COP_Return", "USD_ETB_Return"]
+                return_cols = ["Coffee_Price_Return", "Crude_Oil_Price_Return", "USD_KRW_Return", "USD_BRL_Return", "USD_COP_Return", "USD_ETB_Return"]
                 for col in return_cols:
                     if col in df.columns:
                         df.loc[0, col] = pd.NA  # 첫 번째 행만 NaN 처리
