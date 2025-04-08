@@ -69,23 +69,25 @@ train_data는 **2015/01/01 - 2024/12/31**이며 이 기간동안의 기후 데�
 
 ### 4-2. 수치형 피쳐 스케일링 없이 진행한 결과
 
-`4-1` 에서 스케일링을 한 상태로 모델을 학습했을 때, random forest의 보수적인 성격에 의해 큰 변화율을 예측하지 못하고, 작은 폭으로 상승 혹은 하락을 예측합니다. 따라서 스케일링 없이도 시도해본 결과는 아래와 같습니다.
+앞서 `4-1`에서 수치형 피처에 스케일링을 적용한 채 모델을 학습했을 때, Random Forest 특성상 보수적으로 학습되며 큰 변화율을 예측하지 못하고, 비교적 완만한 상승 또는 하락만을 보였습니다.
+
+이에 따라 스케일링 없이 모델을 학습한 결과는 아래와 같습니다.
 
 ![future_pred_v2_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/data/test_pred_result/rf/future_pred_v2_plot.png?raw=true)
 
-예측을 좀 더 과감하게 하는 것처럼 보이지만 정확하다고 보기는 어렵습니다. 하지만 단기(2주) 예측 면에서는 꽤 괜찮은 결과를 보여줍니다.
+이번에는 예측이 보다 과감하게 이루어진 것처럼 보이지만, 전체적인 정확도 측면에서는 여전히 만족스럽다고 보기는 어렵습니다. 다만, 단기 예측(2주) 성능은 꽤 괜찮은 결과를 보였습니다.
 
 ![future_pred_v2_2week_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/data/test_pred_result/rf/future_pred_v2_2week_plot.png?raw=true)
 
-아래 이미지는 valid 기간에서의 예측값입니다. 과감하게 예측을 하다보니 특점 시점 이후로 급격하게 상승하는 경향을 보입니다.
+아래 이미지는 validation 구간에서의 예측 결과입니다. 전반적으로 과감한 예측 경향으로 인해, 특정 시점 이후부터 예측값이 급격히 상승하는 모습을 확인할 수 있습니다.
 
 ![rf_pred_result_v2_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/data/test_pred_result/rf/rf_pred_result_v2_plot.png?raw=true)
 
-어느 지점이 한계인지 알고 싶어서 앞 5개월을 잘라 확인해 본 결과는 아래와 같습니다.
+예측의 신뢰 구간이 어느 정도까지 유효한지 확인하기 위해, 앞쪽 5개월만 잘라 시각화한 결과는 다음과 같습니다.
 
 ![rf_pred_result_v2_first5m_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/data/test_pred_result/rf/rf_pred_result_v2_first5m_plot.png?raw=true)
 
-대략 최대 3개월 예측이 마지노선이라고 생각됩니다.
+이를 바탕으로 판단해보면, 최대 약 3개월 이내의 예측이 한계선이라고 생각됩니다.
 
 ---
 
