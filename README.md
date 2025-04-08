@@ -53,5 +53,5 @@ DATA-PREP/
 
 2. `correlation_visualizer.py` 을 실행하여 데이터의 상관관계 정보를 시각화하여 볼 수 있습니다.
 
-3. `python test/rf_pred_return` 을 실행하여 예측 결과를 확인할 수 있습니다.
+3. `python test/rf_pred_return.py` 을 실행하여 예측 결과를 확인할 수 있습니다.
     > 모델 설명 및 예측 결과에 대한 설명은 [이곳](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/docs/rf_model_description.md)에서 확인 할 수 있습니다.

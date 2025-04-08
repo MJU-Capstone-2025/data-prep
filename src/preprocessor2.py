@@ -124,7 +124,7 @@ if __name__ == "__main__":
         'Date',
         'T2M',
         'WS2M',
-        'ALLSKY_SFC_SW_DWN',
+        'ALLSKY_SFC_SW_DWN', 
         'ALLSKY_SFC_UV_INDEX',
         'PRECTOTCORR',
         'RH2M',

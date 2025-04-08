@@ -51,7 +51,7 @@ class RandomForestModel:
         r2 = r2_score(y_test, preds)
         return {"RMSE": rmse, "R2": r2}
 
-class TestRFmodel:
+class Testmodel:
     def __init__(self):
         self.data = None
         self.model = None
@@ -243,7 +243,7 @@ class TestRFmodel:
 
 
 if __name__ == "__main__":
-    tester = TestRFmodel()
+    tester = Testmodel()
     tester.load_datas("../data/final/train_weather.csv")
     tester.run_training_pipeline(alpha=4.5)
     tester.predict_future_until("2025-01-01", "2025-04-01", alpha=4.5)
