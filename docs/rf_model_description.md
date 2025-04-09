@@ -29,17 +29,17 @@ train_data는 **2015/01/01 - 2024/12/31**이며 이 기간동안의 기후 데�
 
 ## 3. Coffee Price 예측 결과
 
-![rf_price_pred_result_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/data/test_pred_result/rf/rf_price_pred_result_plot.png?raw=true)
+![rf_price_pred_result_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/main/data/test_pred_result/rf/rf_price_pred_result_plot.png?raw=true)
 
-<small>[이미지 링크](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/data/test_pred_result/rf/rf_price_pred_result_plot.png)</small>
+<small>[이미지 링크](https://github.com/MJU-Capstone-2025/data-prep/blob/main/data/test_pred_result/rf/rf_price_pred_result_plot.png)</small>
 
 예측 Target은 당연히 커피의 가격이며, **2025/01/01 ~ 2025/04/01** 범위를 예측하기 전 train data의 최근 20퍼센트를 검증 데이터로 활용하였습니다. 검증 기간동안의 가격 예측 결과는 위와 같습니다.
 
 위 그래프를 보면 예측 결과와 실제 값의 오차가 매우 큰 것을 알 수 있습니다. 2023년 전에는 낮은 가격에서 상승 및 횡보를 하였고, 2023년 이후에는 큰 폭으로 가격이 상승하였기에 모델은 낮은 가격의 범위에서 예측 결과를 도출하게 되어 현재 가격대에 전혀 대응을 하지 못하고 있습니다.
 
-![future_price_pred_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/data/test_pred_result/rf/future_price_pred_plot.png?raw=true)
+![future_price_pred_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/main/data/test_pred_result/rf/future_price_pred_plot.png?raw=true)
 
-<small>[이미지 링크](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/data/test_pred_result/rf/future_price_pred_plot.png)</small>
+<small>[이미지 링크](https://github.com/MJU-Capstone-2025/data-prep/blob/main/data/test_pred_result/rf/future_price_pred_plot.png)</small>
 
 위 이미지는 테스트 기간인 **2025/01/01 ~ 2025/04/01** 동안의 커피 가격을 예측한 결과입니다. 그래프를 보면, 모델이 여전히 낮은 가격대에서 예측하려는 경향을 보이며, 이로 인해 `실제값 - 예측값`의 차이가 크게 발생하고 있습니다.
 
@@ -53,9 +53,9 @@ train_data는 **2015/01/01 - 2024/12/31**이며 이 기간동안의 기후 데�
 
 ### 4-1. 수치형 피쳐 스케일링 후 진행한 결과
 
-> 예측 코드는 [이곳](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/src/test/rf_pred_return.py)에서 확인할 수 있습니다.
+> 예측 코드는 [이곳](https://github.com/MJU-Capstone-2025/data-prep/blob/main/src/test/rf_pred_return.py)에서 확인할 수 있습니다.
 
-![rf_pred_result_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/data/test_pred_result/rf/rf_pred_result_plot.png?raw=true)
+![rf_pred_result_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/main/data/test_pred_result/rf/rf_pred_result_plot.png?raw=true)
 
 예측 Target은 `Coffee_Return` 컬럼이며, 검증 구간(최근 20%)에서의 예측 결과는 위와 같습니다. 모델은 변화율을 예측하고, 이를 직전 커피 가격에 적용하는 방식으로 최종 가격을 계산합니다.
 
@@ -63,7 +63,7 @@ train_data는 **2015/01/01 - 2024/12/31**이며 이 기간동안의 기후 데�
 
 하지만 아래와 같이 미래를 예측할 경우, 실제 기후 데이터를 알 수 없으므로 오직 과거 관측값을 활용한 lag feature들만 사용할 수밖에 없습니다. 이로 인해 입력 변수들의 정보가 제한되고, 결과적으로 만족스럽지 못한 예측 결과를 초래합니다.
 
-![future_pred_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/data/test_pred_result/rf/future_pred_plot.png?raw=true)
+![future_pred_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/main/data/test_pred_result/rf/future_pred_plot.png?raw=true)
 
 그럼에도 불구하고, **전반적인 상승 혹은 하락의 추세는 어느 정도 예측이 가능**하다는 점에서 의미 있는 방향성을 보여줍니다.
 
@@ -73,21 +73,23 @@ train_data는 **2015/01/01 - 2024/12/31**이며 이 기간동안의 기후 데�
 
 이에 따라 스케일링 없이 모델을 학습한 결과는 아래와 같습니다.
 
-![future_pred_v2_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/data/test_pred_result/rf/future_pred_v2_plot.png?raw=true)
+![future_pred_v2_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/main/data/test_pred_result/rf/future_pred_v2_plot.png?raw=true)
 
 이번에는 예측이 보다 과감하게 이루어진 것처럼 보이지만, 전체적인 정확도 측면에서는 여전히 만족스럽다고 보기는 어렵습니다. 다만, 단기 예측(2주) 성능은 꽤 괜찮은 결과를 보였습니다.
 
-![future_pred_v2_2week_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/data/test_pred_result/rf/future_pred_v2_2week_plot.png?raw=true)
+![future_pred_v2_2week_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/main/data/test_pred_result/rf/future_pred_v2_2week_plot.png?raw=true)
 
 아래 이미지는 validation 구간에서의 예측 결과입니다. 전반적으로 과감한 예측 경향으로 인해, 특정 시점 이후부터 예측값이 급격히 상승하는 모습을 확인할 수 있습니다.
 
-![rf_pred_result_v2_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/data/test_pred_result/rf/rf_pred_result_v2_plot.png?raw=true)
+![rf_pred_result_v2_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/main/data/test_pred_result/rf/rf_pred_result_v2_plot.png?raw=true)
 
 예측의 신뢰 구간이 어느 정도까지 유효한지 확인하기 위해, 앞쪽 5개월만 잘라 시각화한 결과는 다음과 같습니다.
 
-![rf_pred_result_v2_first5m_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/f-weatherNmarket/data/test_pred_result/rf/rf_pred_result_v2_first5m_plot.png?raw=true)
+![rf_pred_result_v2_first5m_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/main/data/test_pred_result/rf/rf_pred_result_v2_first5m_plot.png?raw=true)
 
 이를 바탕으로 판단해보면, 최대 약 3개월 이내의 예측이 한계선이라고 생각됩니다.
+
+![rf_pred_result_v2_first3m_plot](https://github.com/MJU-Capstone-2025/data-prep/blob/main/data/test_pred_result/rf/rf_pred_result_v2_first3m_plot.png?raw=true)
 
 ---
 

@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -16,7 +17,7 @@ class RandomForestModel:
         self.is_trained = False
 
     def train(self, X_train, y_train, cat_features=None):
-        y_train_scaled = y_train * 100
+        y_train_transformed = np.log1p(y_train) * 100
         preprocessor = ColumnTransformer(
             transformers=[('cat', OneHotEncoder(handle_unknown='ignore'), cat_features)],
             remainder='passthrough'
@@ -30,14 +31,14 @@ class RandomForestModel:
                 n_jobs=-1
             ))
         ])
-        self.model.fit(X_train, y_train_scaled)
+        self.model.fit(X_train, y_train_transformed)
         self.is_trained = True
 
     def predict(self, X, alpha=1.0):
         if not self.is_trained:
             raise Exception("Model has not been trained yet.")
         y_pred_scaled = self.model.predict(X)
-        return (y_pred_scaled / 100) * alpha
+        return np.expm1(y_pred_scaled / 100) * alpha
 
     def evaluate(self, X_test, y_test, alpha=1.0):
         preds = self.predict(X_test, alpha=alpha)
@@ -56,7 +57,7 @@ class Testmodel:
         print(f"📄 데이터 로드 완료: shape = {self.data.shape}")
         return self.data
 
-    def run_training_pipeline(self, save_path="../data/test_pred_result/rf/rf_pred_result_v2.csv", alpha=5.0):
+    def run_training_pipeline(self, save_path="../data/test_pred_result/rf/rf_pred_result_v3.csv", alpha=5.0):
         df = self.data.copy()
         df["Date"] = pd.to_datetime(df["Date"])
         df = df.sort_values("Date").reset_index(drop=True).dropna()
@@ -101,6 +102,7 @@ class Testmodel:
         daily_return.to_csv(save_path, index=False)
         print(f"✅ 결과 저장 완료: {save_path}")
 
+        # 모델 평가
         X_val_grouped = X_val.copy()
         X_val_grouped["Date"] = val_dates.values
         numeric_cols = X_val_grouped.select_dtypes(include=["number"]).columns
@@ -117,11 +119,11 @@ class Testmodel:
 
         self._plot_prediction(daily_return, save_path.replace(".csv", "_plot.png"))
 
-        # 초반 3개월짜리만 시각화 따로 저장
-        first_3m = daily_return[daily_return['Date'] < daily_return['Date'].min() + pd.DateOffset(months=3)]
-        self._plot_prediction(first_3m, save_path.replace(".csv", "_first3m_plot.png"))
+        # 첫 5개월 시각화
+        first_5m = daily_return[daily_return['Date'] < daily_return['Date'].min() + pd.DateOffset(months=5)]
+        self._plot_prediction(first_5m, save_path.replace(".csv", "_first5m_plot.png"))
 
-    def predict_future_until(self, start_date: str, end_date: str, save_path="../data/test_pred_result/rf/future_pred_v2.csv", alpha=5.0):
+    def predict_future_until(self, start_date: str, end_date: str, save_path="../data/test_pred_result/rf/future_pred_v3.csv", alpha=5.0):
         df = self.data.copy()
         df["Date"] = pd.to_datetime(df["Date"])
         df = df.sort_values("Date").reset_index(drop=True).dropna()
@@ -179,8 +181,7 @@ class Testmodel:
         self._plot_prediction(result_df, save_path.replace(".csv", "_plot.png"), future=True)
 
     def _days_until_harvest(self, date: pd.Timestamp, country: str) -> int:
-        country = country.lower()
-        harvest_month = {"brazil": 5, "colombia": 10, "ethiopia": 10}.get(country, 5)
+        harvest_month = {"brazil": 5, "colombia": 10, "ethiopia": 10}.get(country.lower(), 5)
         this_year = date.year
         next_harvest = pd.Timestamp(year=this_year, month=harvest_month, day=1)
         if date >= next_harvest:
@@ -251,5 +252,5 @@ class Testmodel:
 if __name__ == "__main__":
     tester = Testmodel()
     tester.load_datas("../data/final/train_weather.csv")
-    tester.run_training_pipeline(alpha=10)
-    tester.predict_future_until("2025-01-01", "2025-04-01", alpha=10)
+    tester.run_training_pipeline(alpha=3)
+    tester.predict_future_until("2025-01-01", "2025-04-01", alpha=3)
