@@ -133,12 +133,18 @@ class CoffeeDataPreprocessor:
         self.df = df
 
     def save_final_data(self, base_path):
-        self.df.to_csv(f"{base_path}/temp_union_data.csv", index=False)
+        self.df.to_csv(f"{base_path}/all_data.csv", index=False)
         self.weather_raw.to_csv(f"{base_path}/weather.csv", index=False)
         self.weather_with_lag.to_csv(f"{base_path}/weather_with_lag.csv", index=False)
         self.market.to_csv(f"{base_path}/market.csv", index=False)
+
+        # Coffee label 저장
+        coffee_label = self.df[['Date', 'Coffee_Price', 'Coffee_Price_Return']].drop_duplicates(subset='Date')
+        coffee_label.to_csv(f"{base_path}/coffee_label.csv", index=False)
+
         print(f"\n통합 데이터 크기: {self.df.shape}")
         print(f"통합 데이터 및 세부 데이터 저장 완료 (경로: {base_path})")
+
 
 
 if __name__ == "__main__":
