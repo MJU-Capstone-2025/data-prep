@@ -84,7 +84,7 @@ scaling_valid = true_start_valid / pred_start_valid
 pred_daily["Predicted_Price_Adjusted"] = pred_daily["Predicted_Price"] * scaling_valid
 
 # 시간 기반 가중치 적용 (valid)
-weight_growth_rate = 1.1
+weight_growth_rate = 0.655
 weights_valid = 1 + np.linspace(0, weight_growth_rate, len(pred_daily))
 pred_daily["Predicted_Price_Weighted"] = pred_daily["Predicted_Price_Adjusted"] * weights_valid
 
@@ -124,8 +124,9 @@ scaling_test = true_start_test / raw_start_test
 test_daily["Predicted_Price_Adjusted"] = test_daily["Predicted_Price"] * scaling_test
 
 # 시간 기반 가중치 적용 (test)
-weights_test = 1 # 테스트는 기간 짧고, 어차피 첫 가격은 시작날로 고정되어 있으니 가중치 필요없음
-test_daily["Predicted_Price_Weighted"] = test_daily["Predicted_Price_Adjusted"] * weights_test
+rate = (1.655 / 1) ** (1 / 365)
+test_weights = np.array([rate ** i for i in range(len(test_daily))])
+test_daily["Predicted_Price_Weighted"] = test_daily["Predicted_Price_Adjusted"] * test_weights
 
 # 성능 평가 (test)
 rmse_test = mean_squared_error(test_daily["Coffee_Price"], test_daily["Predicted_Price_Weighted"])

@@ -77,9 +77,10 @@ pred_daily = valid_data.groupby("Date")["Predicted_Price"].mean().reset_index()
 pred_daily["Date"] = pd.to_datetime(pred_daily["Date"])
 pred_daily = pd.merge(pred_daily, valid_label, on="Date", how="left")
 
-# 9-1. 일별 가중치 적용 (1.0 → 1.1 선형 증가)
-valid_weights = np.linspace(1.0, 2.0, len(pred_daily))
+# 9-1. 일별 가중치 적용 (예측값에 대해 pred_daily 기간 동안 1.0에서 2.0까지 선형적으로 증가하는 가중치 부여)
+valid_weights = np.linspace(1.0, 1.655, len(pred_daily))
 pred_daily["Predicted_Price_Weighted"] = pred_daily["Predicted_Price"] * valid_weights
+
 
 # 시작 가격 맞추기 (valid)
 true_start_valid = pred_daily["Coffee_Price"].iloc[0]
@@ -116,9 +117,13 @@ test_daily = test_data.groupby("Date")["Predicted_Price"].mean().reset_index()
 test_daily["Date"] = pd.to_datetime(test_daily["Date"])
 test_daily = pd.merge(test_daily, test_label, on="Date", how="left")
 
-# 12-1. 가중치 적용 안함 test 기간은 짧아서
-test_weights = np.linspace(1.0, 1.1, len(test_daily))
-test_daily["Predicted_Price_Weighted"] = test_daily["Predicted_Price"]
+# 12-1. 가중치 적용 
+# 1년 동안 1.655배 상승하는 가중치 증가 비율
+rate = (1.655 / 1) ** (1 / 365)
+
+# test 기간에 맞춰 가중치 적용
+test_weights = np.array([rate ** i for i in range(len(test_daily))])
+test_daily["Predicted_Price_Weighted"] = test_daily["Predicted_Price"] * test_weights
 
 # 시작 가격 보정 (test)
 true_start_test = test_daily["Coffee_Price"].iloc[0]
@@ -130,8 +135,9 @@ test_daily["Predicted_Price_Adjusted"] = test_daily["Predicted_Price_Weighted"] 
 test_daily["Predicted_Price_Adjusted_Shifted"] = test_daily["Predicted_Price_Adjusted"].shift(-1)
 
 # 13. test 성능
-rmse_test = mean_squared_error(test_daily["Coffee_Price"], test_daily["Predicted_Price_Adjusted"])
-r2_test = r2_score(test_daily["Coffee_Price"], test_daily["Predicted_Price_Adjusted"])
+test_daily = test_daily.dropna(subset=["Predicted_Price_Adjusted_Shifted", "Coffee_Price"])
+rmse_test = mean_squared_error(test_daily["Coffee_Price"], test_daily["Predicted_Price_Adjusted_Shifted"])
+r2_test = r2_score(test_daily["Coffee_Price"], test_daily["Predicted_Price_Adjusted_Shifted"])
 print("\n📊 테스트 성능 (보정 + 가중치):")
 print(f"Test RMSE : {rmse_test:.5f}")
 print(f"Test R²   : {r2_test:.5f}")
