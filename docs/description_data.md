@@ -1,139 +1,90 @@
 # Data Description
 
-## 1. Raw Data
+## 1. 컬럼 설명
 
-**국가\_지역.csv 컬럼 이름 설명**
+> 줄이 그어져 있는 컬럼은 전처리 과정에서 삭제된 컬럼
 
--   `ALLSKY_SFC_UV_INDEX`: 전체 하늘 조건에서의 자외선 지수 (W/m² × 40)
--   `ALLSKY_SFC_SW_DWN`: 전체 하늘 조건에서 지표면에 도달한 단파 복사량 (kWh/m²/day)
--   `WS2M`: 지상 2미터 높이의 평균 풍속 (m/s)
--   `CLRSKY_SFC_SW_DWN`: 맑은 하늘 조건에서의 지표면 단파 복사량 (kWh/m²/day)
--   `T2M`: 지상 2미터에서의 일 평균 기온 (°C)
--   `T2M_MAX`: 지상 2미터에서의 일 최고 기온 (°C)
--   `T2M_MIN`: 지상 2미터에서의 일 최저 기온 (°C)
--   `RH2M`: 지상 2미터에서의 상대습도 (%)
--   `PRECTOTCORR`: 보정된 일 누적 강수량 (mm/day)
--   `PS`: 지표면 기압 (kPa)
--   `CLRSKY_SFC_PAR_TOT`: 맑은 하늘 조건에서의 광합성 유효 복사(PAR) 총량 (kWh/m²/day)
--   `WS10M_MAX`: 지상 10미터에서의 최대 풍속 (m/s)
--   `WS10M_MIN`: 지상 10미터에서의 최소 풍속 (m/s)
--   `ALLSKY_KT`: 전체 하늘 일사량 맑음 지수 (dimensionless)
--   `T2M_RANGE`: 일일 기온 범위 = 최고 기온 - 최저 기온 (°C)
--   `WS10M`: 지상 10미터에서의 평균 풍속 (m/s)
--   `TS`: 지표면 온도 (지표 피부 온도, °C)
--   `WSC`: 고도 보정이 적용된 바람 속도 (m/s)
+### 1-1. 기후 데이터
 
-**coffee_c_price 컬럼 이름 설명**
+| 컬럼명                 | 설명                                                 |
+| ---------------------- | ---------------------------------------------------- |
+| ~~YEAR~~               | ~~연도 정보~~                                        |
+| ~~MO~~                 | ~~월 정보~~                                          |
+| ~~DY~~                 | ~~일 정보~~                                          |
+| Date                   | 날짜 (YYYY-MM-DD 형식)                               |
+| ALLSKY_SFC_UV_INDEX    | 전체 하늘 자외선 지수                                |
+| ALLSKY_SFC_SW_DWN      | 전체 하늘 지표면 단파 복사량 (W/m²)                  |
+| WS2M                   | 지표면(2m) 풍속 (m/s)                                |
+| ~~CLRSKY_SFC_SW_DWN~~  | ~~맑은 하늘 지표면 단파 복사량 (W/m²)~~              |
+| T2M                    | 2m 기온 (°C)                                         |
+| ~~T2M_MAX~~            | ~~최고 기온 (°C)~~                                   |
+| ~~T2M_MIN~~            | ~~최저 기온 (°C)~~                                   |
+| RH2M                   | 상대 습도 (%)                                        |
+| PRECTOTCORR            | 강수량 (mm)                                          |
+| PS                     | 기압 (Pa)                                            |
+| ~~CLRSKY_SFC_PAR_TOT~~ | ~~맑은 하늘 지표면 광합성 유효복사 (mol/m²/day)~~    |
+| ~~WS10M_MAX~~          | ~~10m 최대 풍속 (m/s)~~                              |
+| ~~WS10M_MIN~~          | ~~10m 최소 풍속 (m/s)~~                              |
+| ~~ALLSKY_KT~~          | ~~전체 하늘 투과율 지수~~                            |
+| ~~T2M_RANGE~~          | ~~일교차 (T2M_MAX - T2M_MIN)~~                       |
+| ~~WS10M~~              | ~~10m 평균 풍속 (m/s)~~                              |
+| ~~TS~~                 | ~~지면 온도 (°C)~~                                   |
+| ~~WSC~~                | ~~풍향 코드 혹은 기타 기상 요소~~                    |
+| locationName           | 지역 정보 (예: brazil_varginha)                      |
+| season_tag             | 수확 시기 구분 (harvest, pre-harvest, off-season 등) |
+| days_until_harvest     | 해당 날짜로부터 다음 수확까지 남은 일수              |
 
--   `Date`: 날짜 (YYYY-MM-DD) 형식
--   `Coffee_Price`: 커피 선물 가격 (센트/파운드, Coffee C Futures – 심볼: KC=F)
+#### Lag Features
 
-**market_data 컬럼 이름 설명**
+| 컬럼명                          | 설명                                 |
+| ------------------------------- | ------------------------------------ |
+| T2M_lag_1m ~ T2M_lag_6m         | 2m 기온의 이전 1~6개월 값            |
+| WS2M_lag_1m ~ WS2M_lag_6m       | 지표면 풍속의 이전 1~6개월 값        |
+| ALLSKY_SFC_SW_DWN_lag_1m ~ \_6m | 지표면 단파 복사량의 이전 1~6개월 값 |
+| ALLSKY_SFC_UV_INDEX_lag_1m~\_6m | 자외선 지수의 이전 1~6개월 값        |
+| PRECTOTCORR_lag_1m ~ \_6m       | 강수량의 이전 1~6개월 값             |
+| RH2M_lag_1m ~ RH2M_lag_6m       | 상대 습도의 이전 1~6개월 값          |
+| PS_lag_1m ~ PS_lag_6m           | 기압의 이전 1~6개월 값               |
 
--   `Date`: 날짜 (YYYY-MM-DD) 형식
--   `Coffee_Price`: 커피 선물 가격 (센트/파운드, Coffee C Futures – 심볼: KC=F)
--   `Crude_Oil_Price`: 서부 텍사스산 원유(WTI) 가격 (달러/배럴 – 심볼: CL=F)
--   `USD_KRW`: 미국 달러(USD) 대비 한국 원(KRW) 환율 (원/달러 – 심볼: KRW=X)
--   `USD_BRL`: 미국 달러(USD) 대비 브라질 헤알(BRL) 환율 (헤알/달러 – 심볼: BRL=X)
--   `USD_COP`: 미국 달러(USD) 대비 콜롬비아 페소(COP) 환율 (페소/달러 – 심볼: COP=X)
--   `USD_VND`: 미국 달러(USD) 대비 베트남 동(VND) 환율 (동/달러 – 심볼: VND=X)
+### 1-2. 시장 데이터
 
----
+| 컬럼명                                | 설명                                     |
+| ------------------------------------- | ---------------------------------------- |
+| ~~Date(조인 기준, 기후 Date를 살림)~~ | ~~날짜 (YYYY-MM-DD 형식)~~               |
+| Coffee_Price                          | 커피 가격 (국제 시세 기준)               |
+| Crude_Oil_Price                       | 원유 가격 (배럴당 가격, 보통 Brent 기준) |
+| USD_KRW                               | 미국 달러 대비 원화 환율                 |
+| USD_BRL                               | 미국 달러 대비 브라질 헤알 환율          |
+| USD_COP                               | 미국 달러 대비 콜롬비아 페소 환율        |
+| USD_ETB                               | 미국 달러 대비 에티오피아 비르 환율      |
+| Coffee_Price_Return                   | 커피 가격의 전일 대비 수익률 (%)         |
+| Crude_Oil_Price_Return                | 원유 가격의 전일 대비 수익률 (%)         |
+| USD_KRW_Return                        | 원-달러 환율의 전일 대비 수익률 (%)      |
+| USD_BRL_Return                        | 브라질 환율 수익률                       |
+| USD_COP_Return                        | 콜롬비아 환율 수익률                     |
+| USD_ETB_Return                        | 에티오피아 환율 수익률                   |
+| ~~month~~                             | ~~월 단위 기준일 (YYYY-MM-01 형식)~~     |
+| Urea_price                            | 요소비료 가격 (단위: USD/톤 등)          |
+| Dap_price                             | 인산디암모늄(DAP) 비료 가격 (USD/톤 등)  |
 
-### 2. Processed1 Data
+### 1-3. 거시경제지표 데이터
 
-**국가\_지역.csv 컬럼 이름 설명**
-
--   raw와 같음
--   다음 컬럼 추가됨:
-
-    -   `Coffee_Price`: 커피 선물 가격 (센트/파운드, Coffee C Futures 심볼: KC=F)
-    -   `Coffee_Return`: 커피 선물 가격 변화율
-
-**coffee_c_price 컬럼 이름 설명**
-
--   raw와 같음
--   다음 컬럼 추가됨:
-    -   `Coffee_Return`: 커피 선물 가격 변화율
-
-**market_data 컬럼 이름 설명**
-
--   raw와 같음
-
----
-
-### 3. Processed2 Data
-
-**국가\_지역.csv 컬럼 이름 설명**
-
--   raw와 같음
--   다음 컬럼 추가됨:
-
-    -   `season_tag`: 해당 날짜가 수확기(`harvest`), 수확 전(`pre-harvest`), 부수적 수확기(`sub_harvest`), 비수확기(`off-season`) 중 어느 시기에 해당하는지 나타냄
-    -   `days_until_harvest`: 해당 날짜로부터 주요 수확기(월 기준)의 시작일까지 남은 날짜 (단위: 일수)
-    -   `T2M_lag_1m ~ T2M_lag_6m`: 평균 기온의 1~6개월 전 시점 값을 lag feature로 생성
-    -   `WS2M_lag_1m ~ WS2M_lag_6m`: 2m 풍속의 1~6개월 전 시점 값을 lag feature로 생성
-    -   `ALLSKY_SFC_SW_DWN_lag_1m ~ _6m`: 단파 복사량의 1~6개월 전 시점 값을 lag feature로 생성
-    -   `PRECTOTCORR_lag_1m ~ _6m`: 강수량의 1~6개월 전 시점 값을 lag feature로 생성
-
----
-
-### 4. Final Train Weather Data
-
-##### 📋 컬럼 설명
-
-> `train_weather`의 `Date` 는 2015/01/01 - 2024/12/31까지
-> `test_weather`의 `Date` 는 2025/01/01 - 2025/04/01까지
-
-| 컬럼명                | 설명                                                         |
-| --------------------- | ------------------------------------------------------------ |
-| `Date`                | 관측 날짜 (YYYY-MM-DD)                                       |
-| `T2M`                 | 평균 기온 (2m 지면 기준, 단위: °C)                           |
-| `WS2M`                | 평균 풍속 (2m 지면 기준, 단위: m/s)                          |
-| `ALLSKY_SFC_SW_DWN`   | 일사량 (단위: W/m²), 지표면에 도달한 단일 일평균 태양 복사량 |
-| `ALLSKY_SFC_UV_INDEX` | 자외선 지수 (UV Index)                                       |
-| `PRECTOTCORR`         | 강수량 (단위: mm/day)                                        |
-| `RH2M`                | 평균 상대 습도 (%), 2m 기준                                  |
-| `PS`                  | 평균 지면 기압 (단위: hPa)                                   |
-| `Coffee_Price`        | 해당 날짜의 커피 가격 (cents/lb)                             |
-| `Coffee_Return`       | 커피 가격 수익률 (전일 대비 변화율, `pct_change`)            |
-| `season_tag`          | 해당 날짜의 계절 구분 (예: harvest, pre-harvest, off-season) |
-| `days_until_harvest`  | 다음 수확일까지 남은 일수                                    |
-
-##### 📌 Lag Feature 설명
-
-| 컬럼명                                | 설명                         |
-| ------------------------------------- | ---------------------------- |
-| `T2M_lag_1m` ~ `T2M_lag_6m`           | 1개월 ~ 6개월 전의 평균 기온 |
-| `WS2M_lag_1m` ~ `WS2M_lag_6m`         | 1개월 ~ 6개월 전의 평균 풍속 |
-| `ALLSKY_SFC_SW_DWN_lag_1m` ~ `lag_6m` | 1개월 ~ 6개월 전의 일사량    |
-| `PRECTOTCORR_lag_1m` ~ `lag_6m`       | 1개월 ~ 6개월 전의 강수량    |
-
-##### 🌍 지역 정보
-
-| 컬럼명         | 설명                                           |
-| -------------- | ---------------------------------------------- |
-| `locationName` | 데이터 수집 지역 이름 (예: brazil_varginha 등) |
-
----
-
-### 5. Final Market Data & Coffee Label
-
-**coffee_c_price 컬럼 이름 설명**
-
--   `Date`: 날짜 (YYYY-MM-DD) 형식
--   `Coffee_Price`: 커피 선물 가격 (센트/파운드, Coffee C Futures – 심볼: KC=F)
-
-**market_data 컬럼 이름 설명**
-
--   `Date`: 날짜 (YYYY-MM-DD) 형식
--   `Coffee_Price`: 커피 선물 가격 (센트/파운드, Coffee C Futures – 심볼: KC=F)
--   `Crude_Oil_Price`: 서부 텍사스산 원유(WTI) 가격 (달러/배럴 – 심볼: CL=F)
--   `USD_KRW`: 미국 달러(USD) 대비 한국 원(KRW) 환율 (원/달러 – 심볼: KRW=X)
--   `USD_BRL`: 미국 달러(USD) 대비 브라질 헤알(BRL) 환율 (헤알/달러 – 심볼: BRL=X)
--   `USD_COP`: 미국 달러(USD) 대비 콜롬비아 페소(COP) 환율 (페소/달러 – 심볼: COP=X)
--   `USD_ETB`: 미국 달러(USD) 대비 에티오피아 비르(ETB) 환율 (비르/달러 – 심볼: ETB=X)
--   `USD_KRW_Return`: USD/KRW 환율의 일간 변화율 (`pct_change()`로 계산)
--   `USD_BRL_Return`: USD/BRL 환율의 일간 변화율
--   `USD_COP_Return`: USD/COP 환율의 일간 변화율
--   `USD_ETB_Return`: USD/ETB 환율의 일간 변화율
+| 컬럼명                                                        | 설명                                                          |
+| ------------------------------------------------------------- | ------------------------------------------------------------- |
+| ~~Area(조인 기준, 기후 locationName을 살림)~~                 | ~~국가명 (거시경제 데이터 기준)~~                             |
+| ~~Year(조인 기준, 기후 Date을 살림)~~                         | ~~연도 (거시경제 데이터 기준)~~                               |
+| Production                                                    | 농업 생산지표 (단위에 따라 다름)                              |
+| ~~index~~                                                     | ~~인덱스 구분자 또는 레코드 식별자~~                          |
+| Agricultural raw materials exports (% of merchandise exports) | 농업 원자재 수출 비율 (% 기준)                                |
+| Merchandise trade (% of GDP)                                  | 상품 무역 비율 (GDP 대비 %)                                   |
+| Unemployment, male (% of male labor force)                    | 남성 실업률 (ILO 추정 기준)                                   |
+| GDP per capita (current US$)                                  | 1인당 GDP (현재 미국 달러 기준)                               |
+| IMF repurchases and charges (TDS, current US$)                | IMF 차입 상환 및 수수료 (달러 기준)                           |
+| Food production index (2014-2016 = 100)                       | 식량 생산 지수 (기준 연도: 2014–2016 = 100)                   |
+| Political Stability and Absence of Violence/Terrorism...      | 정치 안정성 및 폭력/테러 부재 지표 (상위 90% 신뢰구간 백분위) |
+| GDP per capita growth (annual %)                              | 1인당 GDP 연간 성장률 (%)                                     |
+| Merchandise exports to low- and middle-income...              | 저/중소득 국가로의 상품 수출 비율 (%)                         |
+| Export unit value index (2015 = 100)                          | 수출 단가 지수 (2015년 기준 = 100)                            |
+| Rural population                                              | 농촌 인구 수                                                  |
+| Permanent cropland (% of land area)                           | 영구 농지 비율 (국토 면적 대비 %)                             |
+| Cereal yield (kg per hectare)                                 | 곡물 수확량 (헥타르당 킬로그램)                               |
