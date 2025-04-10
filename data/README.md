@@ -107,4 +107,55 @@ data/
 
 ---
 
-## 3. 데이터 전처리 과정
+## 3. 데이터 가공 과정
+
+### 3-1. 기후 데이터 가공
+
+1. NASA에서 WSC(풍향 코드) 데이터 같은 경우는 특정 지역들(네 지역 정도)만 제공함. 따라서 컬럼 통일을 위해 삭제하였음.
+2. 최근 날짜의 기후 데이터는 전부 -999로 설정되어 있었고, 그 비중은 전체 데이터에 0.3% 정도밖에 되지 않아 삭제하였음.(2025/03/24-2025/04/09 삭제)
+3. ALLSKY_SFC_UV_INDEX 컬럼의 결측치는 8% 정도로 삭제하기에는 너무 많았음. 따라서 월평균으로 보간하였음.
+4. YEAR, MO, DY를 하나의 컬럼으로 "Date"로 통합하였음.
+5. 불필요한 컬럼들을 삭제하였음.(`2. 컬럼 설명`에서 확인 가능 & `raw/`에서 찾을 수 있음.)
+6. 파생 컬럼(수확시기, 수확 시기까지 남은 기간, 재배지역 이름)을 추가하였음.
+7. locationName 별로 기후 컬럼에 1~6개월의 lag feature를 생성하였음.
+
+### 3-2. 시장 데이터 가공
+
+> market.csv에 해당
+
+1. 환율, 유가, 커피 가격의 결측치는 전날로 보간하였음.(시장이 안열렸기에 결측치 발생으로 판단)
+2. 가격은 이전 값으로 대체했기 때문에, 변화율 결측치는 0.0으로 처리하였음.
+
+### 3-3. all_data.csv 데이터 가공
+
+1. `weather.csv`에는 최근 데이터에 결측치가 발생하였고, `3-1` 설명과 같이 결측치 보정함.
+2. `weather_with_lag.csv`는 lag feature 생성 이후, 초반 일부 lag 결측치를 제외하면 결측치가 없음.
+3. `weather_with_lag.csv` + `marker.csv` 조인 후 **첫 번째 행(2015/01/01) 삭제하여 결측치 제거**하였음.
+   → `market.csv`의 변화율은 첫날 기준 데이터가 없어 결측치가 발생했기 때문
+4. `fertilizer.csv` 까지 조인 후에는 1,005 개의 결측치가 발생하였고 nan 상태로 놔둠. 이는 전체 행에서 2.97%만 해당하는 크기임. `fertilizer.csv`의 데이터는 2015/01부터 2024/11까지만 제공해서 발생한 결측치임.(기존 데이터는 2015/01/02 - 2025/03/23)
+   → `fertilizer.csv`는 월 단위 데이터로, 2015/01 ~ 2024/11까지만 제공되며, 일별로 기존 월 데이터를 확장해 사용
+5. `all_data.csv`는 기존 데이터에 `macroeconomic.csv` 거시경제 지표 데이터를 조인 한 데이터임. 이 데이터에는 다음과 같이 결측치가 발생하였음.
+
+> "총 33,593개의 샘플에서 15,485개의 샘플에 결측치가 존재함."
+> 결측치가 있는 컬럼 요약 (lag feature 제외)
+
+| 컬럼명                                                                                                         | 결측치 개수 |
+| -------------------------------------------------------------------------------------------------------------- | ----------- |
+| Urea_price                                                                                                     | 1005        |
+| Dap_price                                                                                                      | 1005        |
+| Production                                                                                                     | 4019        |
+| Agricultural raw materials exports (% of merchandise exports)                                                  | 4019        |
+| Merchandise trade (% of GDP)                                                                                   | 4019        |
+| Unemployment, male (% of male labor force) (modeled ILO estimate)                                              | 4019        |
+| GDP per capita (current US$)                                                                                   | 4019        |
+| IMF repurchases and charges (TDS, current US$)                                                                 | 4019        |
+| Food production index (2014-2016 = 100)                                                                        | 7304        |
+| Political Stability and Absence of Violence/Terrorism: Percentile Rank, Upper Bound of 90% Confidence Interval | 4019        |
+| GDP per capita growth (annual %)                                                                               | 4019        |
+| Merchandise exports to low- and middle-income economies within region (% of total merchandise exports)         | 13874       |
+| Export unit value index (2015 = 100)                                                                           | 4019        |
+| Rural population                                                                                               | 4019        |
+| Permanent cropland (% of land area)                                                                            | 7304        |
+| Cereal yield (kg per hectare)                                                                                  | 7304        |
+
+거시경제지표 데이터는 2015 - 2023 기간밖에 제공을 하지 않아 많은 결측치가 발생하였음. 또한 거시경제지표 데이터는 연 단위이며, 일 단위 데이터와 병합을 위해 별도 보간 없이 그대로 일별로 확장 처리하였음.
