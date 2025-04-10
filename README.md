@@ -7,7 +7,7 @@
 ```
 data-prep/
 ├── data/
-│ ├── final/
+│ ├── preprocessed/
 │ ├── raw/
 │
 ├── docs/
