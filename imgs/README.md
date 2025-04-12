@@ -11,3 +11,9 @@
 3. [웹 view 설명](https://github.com/MJU-Capstone-2025/data-prep/blob/preprocessing/imgs/Slide%2016_9%20-%201.png)
 
 <img src="https://github.com/MJU-Capstone-2025/data-prep/blob/preprocessing/imgs/Slide%2016_9%20-%201.png?raw=true" alt="웹 view 설명" height="450px">
+
+###
+
+1. [시연을 위한 임시 System Architecture Diagram](https://github.com/MJU-Capstone-2025/data-prep/blob/preprocessing/imgs/Slide%2016_9%20-%201.png)
+
+<img src="https://github.com/MJU-Capstone-2025/data-prep/blob/preprocessing/imgs/Temp System Architecture Diagram.png?raw=true" alt="웹 view 설명" height="450px">
