@@ -23,7 +23,7 @@ train_data = data[(data['Date'] >= '2020-01-01') & (data['Date'] <= '2024-02-28'
 valid_data = data[(data['Date'] >= '2024-02-29') & (data['Date'] <= '2025-02-28')].copy()
 test_data  = data[(data['Date'] >= '2025-03-01') & (data['Date'] <= '2025-03-23')].copy()
 
-# NaN 처리
+# test 데이터는 미래 시점이기에, 기후 데이터를 NaN 처리하고, lag feature만 남겨둠.
 lag_cols = [col for col in test_data.columns if 'lag' in col]
 exclude_from_nan = lag_cols + ['locationName', 'season_tag', 'days_until_harvest']
 non_lag_weather_cols = [col for col in numerical_cols if col not in exclude_from_nan]
@@ -34,7 +34,7 @@ for col in non_lag_weather_cols:
 
 # 4. label 분리
 label['Date'] = pd.to_datetime(label['Date'])
-train_label = label[(label['Date'] >= '2015-01-02') & (label['Date'] <= '2024-02-28')].copy()
+train_label = label[(label['Date'] >= '2020-01-01') & (label['Date'] <= '2024-02-28')].copy()
 valid_label = label[(label['Date'] >= '2024-02-29') & (label['Date'] <= '2025-02-28')].copy()
 test_label  = label[(label['Date'] >= '2025-03-01') & (label['Date'] <= '2025-03-23')].copy()
 

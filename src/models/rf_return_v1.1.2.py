@@ -14,10 +14,17 @@ label = pd.read_csv('../data/preprocessed/coffee_label.csv')
 print(f"1. 데이터 로드: {data.shape}\n")
 
 # 2. 범주형, 수치형 컬럼 분할
+# Date에서 month 추출 → 문자열로 변환해서 범주형 처리
+data['Date'] = pd.to_datetime(data['Date'])
+data['month'] = data['Date'].dt.month.astype(str)
 categorical_cols = data.select_dtypes(include=['object']).columns.tolist()
 categorical_cols = [col for col in categorical_cols if col != 'Date']
+if 'month' not in categorical_cols:
+    categorical_cols.append('month')
 numerical_cols = data.select_dtypes(include=['float64', 'int64']).columns.tolist()
 date_col = ['Date'] if 'Date' in data.columns else []
+
+
 
 print("2. 컬럼 타입 분류:")
 print(f"범주형 컬럼: {categorical_cols}")

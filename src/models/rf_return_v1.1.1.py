@@ -14,8 +14,12 @@ label = pd.read_csv('../data/preprocessed/coffee_label.csv')
 print(f"1. 데이터 로드: {data.shape}\n")
 
 # 2. 범주형, 수치형 컬럼 분할
+## 2-1. Date에서 month 파생
+data['Date'] = pd.to_datetime(data['Date'])
+data['month'] = data['Date'].dt.month.astype(str)
+
+## 2-2 컬럼 분류
 categorical_cols = data.select_dtypes(include=['object']).columns.tolist()
-categorical_cols = [col for col in categorical_cols if col != 'Date']
 numerical_cols = data.select_dtypes(include=['float64', 'int64']).columns.tolist()
 date_col = ['Date'] if 'Date' in data.columns else []
 
@@ -43,7 +47,7 @@ print(f"test_data: {test_data.shape}")
 lag_cols = [col for col in test_data.columns if 'lag' in col]
 
 # NaN 처리 예외 컬럼 목록
-exclude_from_nan = lag_cols + ['locationName', 'season_tag', 'days_until_harvest']
+exclude_from_nan = lag_cols + ['locationName', 'season_tag', 'days_until_harvest', 'month']
 
 # 나머지 수치형 중에서 NaN 처리할 컬럼만 추출
 non_lag_weather_cols = [col for col in numerical_cols if col not in exclude_from_nan]
@@ -73,12 +77,9 @@ print(f"test_label : {test_label.shape}\n")
 # 각 지역의 X에 동일한 y를 “복제”해서 학습할 수 있게 만들기 위함이다.
 # valid는 병합 안 하는 이유: 
 # 예측 후, 날짜별로 여러 개의 예측값을 평균 내서 하나의 최종 예측을 만들 계획이기 때문
-train_data['Date'] = pd.to_datetime(train_data['Date'])
-train_label['Date'] = pd.to_datetime(train_label['Date'])
 train = pd.merge(train_data, train_label, on="Date", how="inner")
 X_train = train.drop(columns=["Date", "Coffee_Price", "Coffee_Price_Return"])
-# 100배 증폭된 값 학습
-y_train = train["Coffee_Price_Return"]  * 100
+y_train = train["Coffee_Price_Return"]
 print(f"5. train 병합 완료:")
 print(f"X_train 행의 수: {X_train.shape[0]}")
 print(f"y_train 행의 수: {y_train.shape[0]}")
@@ -116,13 +117,12 @@ print("RandomForestRegressor 모델 학습중...")
 pipeline.fit(X_train, y_train)
 print("RandomForestRegressor 모델 학습 완료")
 
-# 9. 검증 데이터 예측, 100배 증폭된 값을 예측했으니 복구
-valid_preds = pipeline.predict(X_valid) / 100
+# 9. 검증 데이터 예측
+valid_preds = pipeline.predict(X_valid)
 
 # 10. 예측 결과에 날짜 붙이기고 날짜별 평균 수익률 계산
 valid_data["Predicted_Return"] = valid_preds
 pred_daily = valid_data.groupby("Date")["Predicted_Return"].mean().reset_index()
-pred_daily["Date"] = pd.to_datetime(pred_daily["Date"])
 pred_daily = pd.merge(pred_daily, valid_label, on="Date", how="left")
 
 # 11. 예측 가격 복원 (누적 곱 방식)
@@ -144,7 +144,7 @@ print("\n검증 성능 평가 결과:")
 print(f"RMSE : {rmse:.5f}")
 print(f"R²   : {r2:.5f}")
 
-# 13. valid 예측 결과 시각화
+# 13. 결과 시각화
 plt.rcParams['font.family'] = 'Malgun Gothic'
 plt.rcParams['axes.unicode_minus'] = False
 
@@ -160,37 +160,27 @@ plt.grid(True)
 plt.tight_layout()
 plt.show()
 
-# 14. test 예측 후 시각화
-
-# 14-1 예측
+# 14. 테스트 데이터 예측
 X_test = test_data[[col for col in test_data.columns if col not in ['Date']]]
-test_preds = pipeline.predict(X_test) / 33
+y_test = test_label["Coffee_Price_Return"].values
+test_preds = pipeline.predict(X_test)
 
-# 14-2 날짜별 평균 수익률 계산
+# 15. 예측 수익률로부터 가격 복원
 test_data["Predicted_Return"] = test_preds
 test_daily = test_data.groupby("Date")["Predicted_Return"].mean().reset_index()
-test_daily["Date"] = pd.to_datetime(test_daily["Date"])
 test_daily = pd.merge(test_daily, test_label, on="Date", how="left")
-
-# 14-3 가격 복원 (누적 곱 방식)
 test_daily = test_daily.sort_values("Date").reset_index(drop=True)
-test_prices = [test_daily['Coffee_Price'].iloc[0]]  # 시작 가격
 
+# 16. 누적 곱 방식으로 가격 예측 복원
+pred_test_prices = [test_daily['Coffee_Price'].iloc[0]]
 for i in range(1, len(test_daily)):
-    prev_price = test_prices[-1]
+    prev_price = pred_test_prices[-1]
     pred_return = test_daily.loc[i, 'Predicted_Return']
-    test_prices.append(prev_price * (1 + pred_return))
+    pred_test_prices.append(prev_price * (1 + pred_return))
 
-test_daily["Predicted_Price"] = test_prices
+test_daily["Predicted_Price"] = pred_test_prices
 
-# 14-4 성능 지표 출력 (참고용)
-rmse_test = root_mean_squared_error(test_daily["Coffee_Price_Return"], test_daily["Predicted_Return"])
-r2_test = r2_score(test_daily["Coffee_Price_Return"], test_daily["Predicted_Return"])
-print("\n📊 테스트 성능 평가 결과:")
-print(f"Test RMSE : {rmse_test:.5f}")
-print(f"Test R²   : {r2_test:.5f}")
-
-# 14-5 시각화
+# 17. 테스트 결과 시각화
 plt.figure(figsize=(14, 6))
 sns.lineplot(data=test_daily, x="Date", y="Coffee_Price", label="True Price")
 sns.lineplot(data=test_daily, x="Date", y="Predicted_Price", label="Predicted Price")
@@ -202,3 +192,11 @@ plt.legend()
 plt.grid(True)
 plt.tight_layout()
 plt.show()
+
+# 추가: 테스트 성능 평가 
+rmse_test = root_mean_squared_error(test_daily["Coffee_Price_Return"], test_daily["Predicted_Return"])
+r2_test = r2_score(test_daily["Coffee_Price_Return"], test_daily["Predicted_Return"])
+
+print("\n📊 테스트 성능 평가 결과:")
+print(f"Test RMSE : {rmse_test:.5f}")
+print(f"Test R²   : {r2_test:.5f}")
